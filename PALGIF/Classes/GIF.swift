@@ -21,7 +21,7 @@
 import Foundation
 
 open class GIF {
-    let source: CGImageSource
+    public let source: CGImageSource
     
     public init?(_ source: CGImageSource) {
         self.source = source

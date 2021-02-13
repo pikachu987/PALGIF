@@ -42,7 +42,7 @@ extension GIF {
             }
         }
         
-        static func ==(lhs: SpeedType, rhs: SpeedType) -> Bool {
+        public static func ==(lhs: SpeedType, rhs: SpeedType) -> Bool {
             switch (lhs, rhs) {
             case (.moreSlow, .moreSlow):
                 return true
@@ -61,7 +61,7 @@ extension GIF {
             }
         }
         
-        static func ===(lhs: SpeedType, rhs: SpeedType) -> Bool {
+        public static func ===(lhs: SpeedType, rhs: SpeedType) -> Bool {
             switch (lhs, rhs) {
             case (.moreSlow, .moreSlow):
                 return true
