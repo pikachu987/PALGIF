@@ -1,0 +1,6 @@
+framework module PALGIF {
+  umbrella header "PALGIF-umbrella.h"
+
+  export *
+  module * { export * }
+}
