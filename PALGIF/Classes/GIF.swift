@@ -21,24 +21,23 @@
 import Foundation
 
 open class GIF {
+    public let data: Data
     public let source: CGImageSource
     public var isGIF: Bool?
     
     var _gifImage: UIImage?
     var _frameImages: [UIImage]?
     
-    public init?(_ source: CGImageSource) {
-        self.source = source
-    }
-    
     public init?(_ data: Data) {
         guard let source = CGImageSourceCreateWithData(data as CFData, nil) else { return nil }
         self.source = source
+        self.data = data
     }
     
     public init?(_ url: URL) {
         guard let data = try? Data(contentsOf: url) else { return nil }
         guard let source = CGImageSourceCreateWithData(data as CFData, nil) else { return nil }
         self.source = source
+        self.data = data
     }
 }
