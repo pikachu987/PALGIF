@@ -39,7 +39,7 @@ extension GIF {
             let frame = UIImage(cgImage: images[index])
             (0..<(Int(delays[index] / value))).forEach({ _ in frames.append(frame) })
         }
-        self.isGIF = !frames.isEmpty
+        self.isGIF = frames.count > 1
         return UIImage.animatedImage(with: frames, duration: Double(duration) / 1000.0)
     }
     
@@ -61,7 +61,7 @@ extension GIF {
                 (0..<(Int(delays[index] / value))).forEach({ _ in frames.append(frame) })
             }
         }
-        self.isGIF = !frames.isEmpty
+        self.isGIF = frames.count > 1
         return frames
     }
 }
