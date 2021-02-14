@@ -24,6 +24,9 @@ open class GIF {
     public let source: CGImageSource
     public var isGIF: Bool?
     
+    var _gifImage: UIImage?
+    var _frameImages: [UIImage]?
+    
     public init?(_ source: CGImageSource) {
         self.source = source
     }

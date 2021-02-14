@@ -22,46 +22,57 @@ import UIKit
 
 extension GIF {
     public var gifImage: UIImage? {
-        let count = CGImageSourceGetCount(self.source)
-        var images = [CGImage]()
-        var delays = [Int]()
-        (0..<count).forEach { (index) in
-            if let image = CGImageSourceCreateImageAtIndex(self.source, index, nil) {
-                images.append(image)
+        if let gifImage = self._gifImage {
+            return gifImage
+        } else {
+            let count = CGImageSourceGetCount(self.source)
+            var images = [CGImage]()
+            var delays = [Int]()
+            (0..<count).forEach { (index) in
+                if let image = CGImageSourceCreateImageAtIndex(self.source, index, nil) {
+                    images.append(image)
+                }
+                let delaySeconds = self.delay(index, source: self.source)
+                delays.append(Int(delaySeconds * 1000))
             }
-            let delaySeconds = self.delay(index, source: self.source)
-            delays.append(Int(delaySeconds * 1000))
+            let duration = delays.reduce(0, +)
+            let value = self.delayValue(delays)
+            var frames = [UIImage]()
+            (0..<count).forEach { (index) in
+                let frame = UIImage(cgImage: images[index])
+                (0..<(Int(delays[index] / value))).forEach({ _ in frames.append(frame) })
+            }
+            self.isGIF = frames.count > 1
+            let gifImage = UIImage.animatedImage(with: frames, duration: Double(duration) / 1000.0)
+            self._gifImage = gifImage
+            return gifImage
         }
-        let duration = delays.reduce(0, +)
-        let value = self.delayValue(delays)
-        var frames = [UIImage]()
-        (0..<count).forEach { (index) in
-            let frame = UIImage(cgImage: images[index])
-            (0..<(Int(delays[index] / value))).forEach({ _ in frames.append(frame) })
-        }
-        self.isGIF = frames.count > 1
-        return UIImage.animatedImage(with: frames, duration: Double(duration) / 1000.0)
     }
     
     public var frameImages: [UIImage] {
-        let count = CGImageSourceGetCount(self.source)
-        var images = [CGImage]()
-        var delays = [Int]()
-        (0..<count).forEach({ (index) in
-            if let image = CGImageSourceCreateImageAtIndex(self.source, index, nil) {
-                images.append(image)
+        if let frameImages = self._frameImages {
+            return frameImages
+        } else {
+            let count = CGImageSourceGetCount(self.source)
+            var images = [CGImage]()
+            var delays = [Int]()
+            (0..<count).forEach({ (index) in
+                if let image = CGImageSourceCreateImageAtIndex(self.source, index, nil) {
+                    images.append(image)
+                }
+                let delaySeconds = self.delay(index, source: self.source)
+                delays.append(Int(delaySeconds * 1000))
+            })
+            let value = self.delayValue(delays)
+            var frames = [UIImage]()
+            (0..<count).forEach { (index) in
+                if let data = UIImage(cgImage: images[index]).pngData(), let frame = UIImage(data: data) {
+                    (0..<(Int(delays[index] / value))).forEach({ _ in frames.append(frame) })
+                }
             }
-            let delaySeconds = self.delay(index, source: self.source)
-            delays.append(Int(delaySeconds * 1000))
-        })
-        let value = self.delayValue(delays)
-        var frames = [UIImage]()
-        (0..<count).forEach { (index) in
-            if let data = UIImage(cgImage: images[index]).pngData(), let frame = UIImage(data: data) {
-                (0..<(Int(delays[index] / value))).forEach({ _ in frames.append(frame) })
-            }
+            self.isGIF = frames.count > 1
+            self._frameImages = frames
+            return frames
         }
-        self.isGIF = frames.count > 1
-        return frames
     }
 }
